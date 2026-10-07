@@ -15,6 +15,21 @@ $n = [
     'fhhk' => '15e02d92-1698-416c-af2f-3e9a872b4d78', // 凤凰香港
 ];
 
+// 播放列表模式: ?list=1 输出 M3U
+if (isset($_GET['list'])) {
+    $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $base = $scheme . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+    $names = ['fhzw' => '凤凰中文', 'fhzx' => '凤凰资讯', 'fhhk' => '凤凰香港'];
+    header('Content-Type: application/x-mpegurl; charset=utf-8');
+    echo "#EXTM3U\n";
+    foreach ($n as $key => $guid) {
+        $name = $names[$key] ?? $key;
+        echo "#EXTINF:-1 tvg-id=\"$key\" group-title=\"凤凰\",$name\n";
+        echo "$base?id=$key\n";
+    }
+    exit();
+}
+
 if (!isset($n[$id])) {
     header("HTTP/1.1 403 Forbidden");
     exit();
