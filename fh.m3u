@@ -40,3 +40,6 @@ http://101.43.60.101:5080/fhxyh.php?from=web&id=fhzx$fhx
 http://101.43.60.101:5080/fhxyh.php?from=web&id=fhzw$fhx
 #EXTINF:-1,tvg-id="凤凰香港" tvg-name="凤凰香港" http-user-agent="okhttp" tvg-logo="https://epg.v1.mk/logo/凤凰香港.png" group-title="香港",凤凰香港台-sh
 http://101.43.60.101:5080/fhxyh.php?from=web&id=fhhk$fhx
+
+http://127.0.0.1:59047/fhxyh.php?id=fhzx
+
