@@ -20,8 +20,8 @@ if (!isset($n[$id])) {
     exit();
 }
 
-$urlp = ($from === 'app') 
-    ? "https://m.fengshows.com/api/v3/hub/live/auth-url?live_id={$n[$id]}&live_qa=" 
+$urlp = ($from === 'app')
+    ? "https://m.fengshows.com/api/v3/hub/live/auth-url?live_id={$n[$id]}&live_qa="
     : "https://api.fengshows.cn/hub/live/auth-url?live_id={$n[$id]}&live_qa=";
 
 $playseek = $_GET['playseek'] ?? '';
@@ -32,11 +32,11 @@ if ($playseek) {
     $playbackbegin = strtotime($t_arr[0]) * 1000;
     $playbackend = strtotime($t_arr[1]) * 1000;
     $now = time() * 1000;
-    
+
     if ($playbackend > $now) {
         $playbackend = $now;
     }
-    
+
     $ps_time = dechex($playbackbegin);
     $pe_time = dechex($playbackend);
     $urle = "&play_type=replay&ps_time=$ps_time&pe_time=$pe_time";
@@ -44,7 +44,7 @@ if ($playseek) {
 
 $url = $urlp . 'FHD' . $urle;
 
-#// 注：APP端token每次重新打开APP就失效（故抓包获取token后，token失效前请不要再次打开APP，最长30天失效），web端token固定30天失效
+// 注: APP端token每次重新打开APP就失效(故抓包获取token后,token失效前请不要再次打开APP,最长30天失效),web端token固定30天失效
 $token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjgyYTlmMC1hNTAzLTExZWYtOGQyZi0xZmE4Mjc3N2Q0MjQiLCJuYW1lIjoi5Lil5qC855qE55SY6JSXMDQ3IiwidmlwIjowLCJqdGkiOiJCd2QyZ1ltZTgiLCJpYXQiOjE3OTEzNzQ0OTUsImV4cCI6MTc5Mzk2NjQ5NX0.EkuVnCUrQ7q8HTpezBdCOvQYwSN9ojM3rlHQZXXADgE"; // 请替换为有效的token
 
 $header = [
@@ -59,8 +59,15 @@ if (strpos($data, 'http') === false) {
     $data = file_get_contents($url);
 }
 
-$live = json_decode($data)->data->live_url;
-header('Location:' . $live);
+$json = json_decode($data);
+$live = $json->data->live_url ?? '';
+
+if (!$live) {
+    header("HTTP/1.1 502 Bad Gateway");
+    exit('上游未返回有效播放地址');
+}
+
+header('Location: ' . $live);
 exit();
 
 function get($url, $header) {
@@ -74,7 +81,3 @@ function get($url, $header) {
     return $data;
 }
 ?>
-
-
-
-
